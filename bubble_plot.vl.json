@@ -1,0 +1,133 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 800,
+  "height": 600,
+  "title": "COVID-19 Cases per Country (13 Oct 2020)",
+  "data": {
+    "url": "https://raw.githubusercontent.com/ashley0416/FIT3179_W10/main/country_wise_latest.csv"
+  },
+  "transform": [
+    {"filter": "datum.Deaths>0"},
+    {"filter": "datum.Confirmed>0"},
+    {
+      "filter": "region_selection == null || datum.WHO_Region == region_selection"
+    }
+  ],
+  "params": [
+    {
+      "name": "region_selection",
+      "bind": {
+        "input": "select",
+        "options": [
+          null,
+          "Africa",
+          "Americas",
+          "Eastern Mediterranean",
+          "Europe",
+          "South-East Asia",
+          "Western Pacific"
+        ],
+        "labels": [
+          "Show All",
+          "Africa",
+          "Americas",
+          "Eastern Mediterranean",
+          "Europe",
+          "South-East Asia",
+          "Western Pacific"
+        ],
+        "name": "Region Selection: "
+      }
+    }
+  ],
+  "encoding": {
+    "x": {
+      "field": "Confirmed",
+      "type": "quantitative",
+      "title": "Confirmed Cases",
+      "axis": {"tickCount": 7},
+      "scale": {"type": "log", "domain": [1, 10000000]}
+    },
+    "y": {
+      "field": "Deaths",
+      "type": "quantitative",
+      "title": "Death Cases",
+      "axis": {"tickCount": 6},
+      "scale": {"type": "log", "domain": [1, 1000000]}
+    }
+  },
+  "layer": [
+    {
+      "mark": "circle",
+      "encoding": {
+        "size": {
+          "field": "Active",
+          "type": "quantitative",
+          "scale": {
+            "type": "threshold",
+            "domain": [10, 100, 1000, 10000, 100000, 1000000]
+          }
+        },
+        "color": {
+          "field": "WHO_Region",
+          "type": "nominal",
+          "scale": {
+            "domain": [
+              "Africa",
+              "Americas",
+              "Eastern Mediterranean",
+              "Europe",
+              "South-East Asia",
+              "Western Pacific"
+            ],
+            "range": [
+              "#e41a1c",
+              "#984ea3",
+              "#ff7f00",
+              "#a6cee3",
+              "#377eb8",
+              "#a65628"
+            ]
+          }
+        },
+        "opacity": {"value": 0.6},
+        "tooltip": [
+          {"field": "Country/Region", "type": "nominal"},
+          {"field": "Confirmed", "type": "quantitative", "format": ","},
+          {"field": "Deaths", "type": "quantitative", "format": ","},
+          {"field": "Active", "type": "quantitative", "format": ","},
+          {"field": "WHO_Region", "type": "nominal"}
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "baseline": "middle",
+        "dx": -12,
+        "fontSize": 11.5,
+        "fontStyle": "italic"
+      },
+      "encoding": {
+        "text": {"field": "Country/Region", "type": "nominal"},
+        "color": {"value": "black"},
+        "opacity": {
+          "condition": {
+            "test": "datum['Country/Region']=='Australia' || datum['Country/Region']=='China' || datum['Country/Region']=='Malaysia' || datum['Country/Region']=='Singapore' || datum['Country/Region']=='Bangladesh' || datum['Country/Region']=='Japan'",
+            "value": 1
+          },
+          "value": 0
+        },
+        "tooltip": [
+          {"field": "Country/Region", "type": "nominal"},
+          {"field": "Confirmed", "type": "quantitative", "format": ","},
+          {"field": "Deaths", "type": "quantitative", "format": ","},
+          {"field": "Active", "type": "quantitative", "format": ","},
+          {"field": "WHO_Region", "type": "nominal"}
+        ]
+      }
+    }
+  ],
+  "config": {}
+}

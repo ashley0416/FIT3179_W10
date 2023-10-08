@@ -1,0 +1,38 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 800,
+  "height": 450,
+  "title": "Cost of Living of Different Countries per Year",
+  "projection": {"type": "equalEarth"},
+  "layer": [
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/ashley0416/FIT3179_AK/main/ne_110m.json",
+        "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+      },
+      "mark": {"type": "geoshape", "fill": "lightgray", "stroke": "white"}
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/ashley0416/FIT3179_AK/main/cleaned_dataset2.csv"
+      },
+      "mark": {"type": "circle", "tooltip": {"content": "data"}},
+      "encoding": {
+        "longitude": {"field": "longitude", "type": "quantitative"},
+        "latitude": {"field": "latitude", "type": "quantitative"},
+        "size": {
+          "field": "globalrank",
+          "type": "quantitative",
+          "title": "Global Ranking",
+          "scale": {"domain": [1, 20]}
+        },
+        "color": {
+          "field": "costofliving",
+          "type": "quantitative",
+          "title": "Cost of Living",
+          "scale": {"scheme": "reds"}
+        }
+      }
+    }
+  ]
+}
